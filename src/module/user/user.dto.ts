@@ -4,3 +4,14 @@ export class CreateUserDto {
   lastName: string;
   password: string;
 }
+
+export class VerifyUserDto {
+  verifyCode: string;
+}
+
+export class ResetUserPasswordDto {
+  id: string;
+  resetCode: string;
+  newPassword: string;
+  confirmPassword: string;
+}

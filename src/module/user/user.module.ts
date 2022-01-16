@@ -15,7 +15,7 @@ import { NextFunction } from 'express-serve-static-core';
           const schema = UserSchema;
           schema.pre<UserEntity>('save', async function (next: NextFunction) {
             const user = this;
-            console.log(user.password);
+            if (!user.isModified('password')) return;
             const hash = await argon2.hash(user.password);
             user.password = hash;
             next();
