@@ -5,6 +5,7 @@ import { UserEntity, UserSchema } from './user.entity';
 import { UserService } from './user.service';
 import * as argon2 from 'argon2';
 import { NextFunction } from 'express-serve-static-core';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { NextFunction } from 'express-serve-static-core';
         },
       },
     ]),
+    EmailModule,
   ],
   controllers: [UserController],
   providers: [UserService],
