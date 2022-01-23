@@ -3,9 +3,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './user.controller';
 import { UserEntity, UserSchema } from './user.entity';
 import { UserService } from './user.service';
+import { EmailModule } from '../email/email.module';
+import { JwtStrategy } from 'src/strategy/jwt.startegy';
+import { UtilsModule } from 'src/utils/utils.module';
 import * as argon2 from 'argon2';
 import { NextFunction } from 'express-serve-static-core';
-
+import { JwtRtStrategy } from 'src/strategy/jwt-rt.startegy';
 @Module({
   imports: [
     MongooseModule.forFeatureAsync([
@@ -21,19 +24,15 @@ import { NextFunction } from 'express-serve-static-core';
             next();
           });
 
-          schema.methods.validatePassword = async function validatePassword(
-            candidatePassword: string,
-          ) {
-            return await argon2.verify(this.password, candidatePassword);
-          };
-
           return schema;
         },
       },
     ]),
+    EmailModule,
+    UtilsModule,
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, JwtStrategy, JwtRtStrategy],
   exports: [UserService],
 })
 export class UserModule {}
