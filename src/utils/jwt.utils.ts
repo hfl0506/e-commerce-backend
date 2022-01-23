@@ -1,41 +1,46 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import jwt from 'jsonwebtoken';
-import { PrivateKeyEnum, PublicKeyEnum } from 'src/enum/key.enum';
+import { JwtService } from '@nestjs/jwt';
+import { Types } from 'mongoose';
+import { PrivateKeyEnum } from 'src/enum/key.enum';
+import { JwtPayload, Tokens } from 'src/global/types/types.global';
 
 @Injectable()
-export class JwtService {
-  constructor(private readonly configService: ConfigService) {}
+export class JwtUtilsService {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  public signJwt(
-    object: Object,
-    keyName: PrivateKeyEnum,
-    options?: jwt.SignOptions | undefined,
-  ) {
-    const signKey = Buffer.from(
-      this.configService.get<string>(keyName),
-      'base64',
-    ).toString('ascii');
-    try {
-      return jwt.sign(object, signKey, {
-        ...(options && options),
-        algorithm: 'RS256',
-      });
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
+  public async getTokens(
+    userId: string,
+    userEmail: string,
+    userRole: string,
+    status: boolean,
+  ): Promise<Tokens> {
+    const jwtPayload: JwtPayload = {
+      sub: userId,
+      email: userEmail,
+      role: userRole,
+      verify: status.toString(),
+    };
 
-  public verifyJwt<T>(token: string, keyName: PublicKeyEnum): T | null {
-    const publicKey = Buffer.from(
-      this.configService.get<string>(keyName),
-      'base64',
-    ).toString('ascii');
-    try {
-      const decoded = jwt.verify(token, publicKey) as T;
-      return decoded;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    const [at, rt] = await Promise.all([
+      this.jwtService.signAsync(jwtPayload, {
+        secret: this.configService.get<string>(PrivateKeyEnum.ACCESS_PRI_TOEKN),
+        expiresIn: this.configService.get<string>('MINS'),
+      }),
+      this.jwtService.signAsync(jwtPayload, {
+        secret: this.configService.get<string>(
+          PrivateKeyEnum.REFRESH_PRI_TOKEN,
+        ),
+        expiresIn: this.configService.get<string>('YEAR'),
+      }),
+    ]);
+
+    return {
+      access_token: at,
+      refresh_token: rt,
+    };
   }
 }

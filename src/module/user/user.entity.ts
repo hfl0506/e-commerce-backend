@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { nanoid } from 'nanoid';
+import { RolesEnum } from './user.enum';
 
 @Schema({ collection: 'user', versionKey: false, timestamps: true })
 export class UserEntity extends Document {
@@ -22,8 +23,14 @@ export class UserEntity extends Document {
   @Prop({ default: null })
   passwordResetCode: string | null;
 
-  @Prop({ default: false })
+  @Prop({ required: true, default: false })
   verified: boolean;
+
+  @Prop({ required: true, default: RolesEnum.USER })
+  roles: RolesEnum;
+
+  @Prop()
+  refreshToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserEntity);
