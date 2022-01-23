@@ -18,7 +18,6 @@ import { JwtRtStrategy } from 'src/strategy/jwt-rt.startegy';
           const schema = UserSchema;
           schema.pre<UserEntity>('save', async function (next: NextFunction) {
             const user = this;
-            console.log(user.password);
             const hash = await argon2.hash(user.password);
             user.password = hash;
             next();
