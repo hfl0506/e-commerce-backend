@@ -27,7 +27,7 @@ export class JwtUtilsService {
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.configService.get<string>(PrivateKeyEnum.ACCESS_PRI_TOEKN),
+        secret: this.configService.get<string>(PrivateKeyEnum.ACCESS_PRI_TOKEN),
         expiresIn: this.configService.get<string>('MINS'),
       }),
       this.jwtService.signAsync(jwtPayload, {
