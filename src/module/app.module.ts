@@ -7,6 +7,7 @@ import { EmailModule } from './email/email.module';
 import { CoreModule } from './core/core.module';
 import { UtilsModule } from 'src/utils/utils.module';
 import { ProductsModule } from './products/products.module';
+import { BlogModule } from './blog/blog.module';
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -20,6 +21,7 @@ import { ProductsModule } from './products/products.module';
     UserModule,
     UtilsModule,
     ProductsModule,
+    BlogModule,
   ],
 })
 export class AppModule {}
