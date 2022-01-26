@@ -28,14 +28,14 @@ export class BlogController {
   public async UpdateBlogPostById(
     @Param('id') id: string,
     dto: UpdateBlogDto,
-  ): Promise<LeanDocument<BlogEntity>> {
+  ): Promise<LeanDocument<BlogEntity> | null> {
     return this.blogService.updateBlogPostById(new Types.ObjectId(id), dto);
   }
 
   @Delete(':id')
   public async DeleteBlogPostById(
     @Param('id') id: string,
-  ): Promise<LeanDocument<BlogEntity>> {
+  ): Promise<LeanDocument<BlogEntity> | null> {
     return this.blogService.deleteBlogPostById(new Types.ObjectId(id));
   }
 }

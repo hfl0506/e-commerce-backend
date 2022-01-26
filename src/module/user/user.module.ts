@@ -7,24 +7,16 @@ import { EmailModule } from '../email/email.module';
 import { JwtStrategy } from 'src/strategy/jwt.startegy';
 import { UtilsModule } from 'src/utils/utils.module';
 import * as argon2 from 'argon2';
-import { NextFunction } from 'express-serve-static-core';
 import { JwtRtStrategy } from 'src/strategy/jwt-rt.startegy';
+import { NextFunction } from 'express';
+import { CallbackError, PreSaveMiddlewareFunction } from 'mongoose';
+
 @Module({
   imports: [
-    MongooseModule.forFeatureAsync([
+    MongooseModule.forFeature([
       {
         name: UserEntity.name,
-        useFactory: () => {
-          const schema = UserSchema;
-          schema.pre<UserEntity>('save', async function (next: NextFunction) {
-            const user = this;
-            const hash = await argon2.hash(user.password);
-            user.password = hash;
-            next();
-          });
-
-          return schema;
-        },
+        schema: UserSchema,
       },
     ]),
     EmailModule,

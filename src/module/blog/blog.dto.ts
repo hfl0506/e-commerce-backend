@@ -1,15 +1,15 @@
 export class GetBlogListResponseDto {
-  title: string;
-  content: string;
-  createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
+  title!: string;
+  content!: string;
+  createdBy!: string;
+  createdAt!: Date;
+  updatedAt!: Date;
 }
 
 export class CreateBlogDto {
-  title: string;
-  content: string;
-  createdBy: string;
+  title!: string;
+  content!: string;
+  createdBy!: string;
 }
 
 export class UpdateBlogDto {

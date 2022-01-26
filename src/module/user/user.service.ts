@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { nanoid } from 'nanoid';
 import { EmailService } from '../email/email.service';
 import {
@@ -22,8 +22,6 @@ import { JwtUtilsService } from 'src/utils/jwt.utils';
 import * as argon2 from 'argon2';
 import { RolesEnum } from './user.enum';
 import { Tokens } from 'src/global/types/types.global';
-import { privateFields } from 'src/global/omit.json';
-import { omit } from 'lodash';
 
 @Injectable()
 export class UserService {
@@ -62,6 +60,7 @@ export class UserService {
 
   public async registerUser(dto: CreateUserDto): Promise<Tokens> {
     try {
+      dto.password = await argon2.hash(dto.password);
       let payload = {
         ...dto,
         roles: RolesEnum.USER,

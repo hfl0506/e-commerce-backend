@@ -31,13 +31,13 @@ export class BlogService {
   public async updateBlogPostById(
     id: Types.ObjectId,
     dto: any,
-  ): Promise<LeanDocument<BlogEntity>> {
+  ): Promise<LeanDocument<BlogEntity> | null> {
     try {
       const blog = await this.blogModel.findById(id);
       let payload = {
-        title: dto.title ?? blog.title,
-        content: dto.content ?? blog.content,
-        createdBy: blog.content,
+        title: dto.title ?? blog?.title,
+        content: dto.content ?? blog?.content,
+        createdBy: blog?.content,
       } as any;
 
       return await this.blogModel
@@ -51,7 +51,7 @@ export class BlogService {
 
   public async deleteBlogPostById(
     id: Types.ObjectId,
-  ): Promise<LeanDocument<BlogEntity>> {
+  ): Promise<LeanDocument<BlogEntity> | null> {
     try {
       return await this.blogModel.findByIdAndDelete(id).lean().exec();
     } catch (error) {

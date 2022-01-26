@@ -9,31 +9,31 @@ import {
 @Schema({ collection: 'products', versionKey: false, timestamps: true })
 export class ProductsEntity extends Document {
   @Prop({ required: true })
-  name: string;
+  name!: string;
 
   @Prop({ required: true })
-  type: string;
+  type!: string;
 
   @Prop({ required: true })
-  category: ProductCategoryEnum[];
+  category!: ProductCategoryEnum[];
 
   @Prop({ required: true })
-  subCategory: ProductSubCategoryEnum[];
+  subCategory!: ProductSubCategoryEnum[];
 
   @Prop()
-  imgUrl: string;
+  imgUrl!: string;
 
   @Prop()
-  price: number;
+  price!: number;
 
   @Prop()
-  description: string;
+  description!: string;
 
   @Prop()
-  size: ProductSizeEnum[];
+  size!: ProductSizeEnum[];
 
   @Prop()
-  color: string[];
+  color!: string[];
 }
 
 export const ProductsSchema = SchemaFactory.createForClass(ProductsEntity);
